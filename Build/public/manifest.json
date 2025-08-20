@@ -1,0 +1,21 @@
+{
+  "name": "Web-Template",
+  "short_name": "Web-Template",
+  "start_url": "/Web-Template/",
+  "scope": "/Web-Template/",
+  "display": "standalone",
+  "background_color": "#2196f3", 
+  "theme_color": "#2196f3",
+  "icons": [
+    {
+      "src": "/Web-Template/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/Web-Template/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
