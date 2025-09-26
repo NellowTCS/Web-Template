@@ -1,54 +1,46 @@
-import { defineConfig } from 'vite'
-import path from 'path'
+// vite.config.js
+import { defineConfig } from "vite";
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
-  root: '.', 
-  publicDir: 'public',
-  build: {
-    outDir: 'dist',
-    emptyOutDir: true,
-    rollupOptions: {
-      input: path.resolve(__dirname, 'public/index.html'),
-      output: {
-        entryFileNames: 'main.js',
-        chunkFileNames: 'main.js',
-        assetFileNames: (assetInfo) => {
-          if (assetInfo.name && assetInfo.name.endsWith('.css')) {
-            return 'styles.css'
-          }
-          return assetInfo.name || 'asset'
-        },
-      },
-    },
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
-    },
-  },
-  server: {
-    port: 3000,
-    open: true,
-    allowedHosts: true,
-  },
+  base: "./",
   plugins: [
-    {
-      name: 'preserve-inline-markers',
-      transformIndexHtml(html) {
-        // Add data-inline="true" to CSS link
-        html = html.replace(
-          /<link[^>]*href=["']\/?styles\.css["'][^>]*>/i,
-          '<link rel="stylesheet" href="styles.css" data-inline="true">'
-        )
-
-        // Add data-inline="true" to JS script
-        html = html.replace(
-          /<script[^>]*src=["']\/?main\.js["'][^>]*><\/script>/i,
-          '<script src="main.js" data-inline="true"></script>'
-        )
-
-        return html
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['robots.txt'],
+      manifest: {
+        name: 'Web-Template',
+        short_name: 'Web-Template',
+        start_url: './',
+        display: 'standalone',
+        theme_color: '#00bfff',
+        background_color: '#00bfff',
       },
-    },
+      pwaAssets: {
+        image: 'public/source-image.png',
+        preset: 'minimal-2023',
+        includeHtmlHeadLinks: true,
+      },
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: /.*\.(js|css|html)$/,
+            handler: 'NetworkFirst',
+            options: { cacheName: 'app-shell' },
+          },
+          {
+            urlPattern: /.*\.(png|ico|json)$/,
+            handler: 'CacheFirst',
+            options: { cacheName: 'assets' },
+          },
+        ],
+      },
+    }),
   ],
-})
+  build: {
+    sourcemap: true,
+    outDir: './dist',
+    emptyOutDir: true,
+    chunkSizeWarningLimit: 1000,
+  },
+});
