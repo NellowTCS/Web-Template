@@ -4,7 +4,7 @@ import { viteSingleFile } from "vite-plugin-singlefile";
 import fs from "fs";
 
 // SVG inliner plugin
-function inlineSvgFaviconPlugin(options: { svg }) {
+function inlineSvgFaviconPlugin(options) {
   return {
     name: "inline-svg-favicon",
     enforce: "post",
@@ -50,7 +50,6 @@ export default defineConfig(({ mode }) => {
             includeHtmlHeadLinks: true,
           },
           workbox: {
-            // Required for PWA to find the inlined file
             globPatterns: ['**/*.{js,css,html,png,ico,json}'],
             runtimeCaching: [
               {
@@ -66,11 +65,9 @@ export default defineConfig(({ mode }) => {
             ],
           },
         }),
-      // Conditionally add the plugin
       isSingleFile && viteSingleFile(),
-      // Only inline favicon SVG when isSingleFile
       isSingleFile && inlineSvgFaviconPlugin({ svg: "public/favicon.png" }),
-    ].filter(Boolean), // Removes 'false' values if not in single-file mode
+    ].filter(Boolean),
 
     build: {
       sourcemap: !isSingleFile,
