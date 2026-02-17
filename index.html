@@ -3,6 +3,14 @@
 
 <head>
     <title>My Page</title>
+    <!-- Embed build info -->
+    <script id="build-info" type="application/json">
+    {
+      "version": "0.1.0",
+      "hash": "BUILD_HASH_WILL_BE_INJECTED",
+      "project": "Web-Template"
+    }
+    </script>
   <script type="module" crossorigin src="./assets/index-RbehLfP5.js"></script>
   <link rel="stylesheet" crossorigin href="./assets/index-DxpyENRG.css">
 <link rel="manifest" href="./manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="./registerSW.js"></script>
@@ -15,6 +23,17 @@
     <p>This is a demo page.</p>
     <button onclick="testFunction()">Click me!</button>
     <button onclick="outputToPage()">Show a square.</button>
+    
+    <!-- Updato client -->
+    <script src="https://nellowtcs.me/updato-cdn/updato.min.js"></script>
+    <script>
+      updato.init({
+        project: "Web-Template",
+        cdn: "https://nellowtcs.me/updato-cdn",
+        checkInterval: 3600000, // 1 hour
+        autoCheck: true
+      });
+    </script>
 </body>
 
 </html>
