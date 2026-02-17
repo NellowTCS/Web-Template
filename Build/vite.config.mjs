@@ -2,6 +2,7 @@ import { defineConfig, loadEnv } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import { viteSingleFile } from "vite-plugin-singlefile";
 import fs from "fs";
+import crypto from "crypto";
 
 // SVG inliner plugin
 function inlineSvgFaviconPlugin(options) {
@@ -21,6 +22,31 @@ function inlineSvgFaviconPlugin(options) {
       // Insert favicon into <head>
       return html.replace(/<head>(.*?)/, `<head>$1\n  ${faviconTag}`);
     },
+  };
+}
+
+// Inject build info plugin
+function injectBuildInfo() {
+  return {
+    name: "inject-build-info",
+    closeBundle() {
+      const htmlPath = "./dist/index.html";
+      let html = fs.readFileSync(htmlPath, "utf8");
+      
+      // Compute hash
+      const hash = crypto
+        .createHash("sha256")
+        .update(html)
+        .digest("hex");
+      
+      // Inject hash into build-info script
+      html = html.replace(
+        '"hash": "BUILD_HASH_WILL_BE_INJECTED"',
+        `"hash": "${hash}"`
+      );
+      
+      fs.writeFileSync(htmlPath, html);
+    }
   };
 }
 
@@ -67,6 +93,7 @@ export default defineConfig(({ mode }) => {
         }),
       isSingleFile && viteSingleFile(),
       isSingleFile && inlineSvgFaviconPlugin({ svg: "public/favicon.png" }),
+      isSingleFile && injectBuildInfo(),
     ].filter(Boolean),
 
     build: {
