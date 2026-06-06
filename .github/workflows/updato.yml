@@ -15,6 +15,10 @@ jobs:
         with:
           node-version: 20
 
+      - name: Build
+        working-directory: Build
+        run: npm ci && npm run build
+
       - name: Read version
         id: version
         run: echo "version=$(node -p "require('./Build/package.json').version")" >> "$GITHUB_OUTPUT"
@@ -25,5 +29,4 @@ jobs:
         with:
           mode: version
           dist_dir: Build/dist
-          build_script: cd Build && npm ci && npm run build
           version: ${{ steps.version.outputs.version }}
