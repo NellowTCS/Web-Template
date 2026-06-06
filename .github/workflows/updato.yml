@@ -19,19 +19,13 @@ jobs:
         working-directory: Build
         run: npm ci && npm run build
 
-      - name: Configure git
-        run: |
-          git config --global user.name "updato"
-          git config --global user.email "updato@users.noreply.github.com"
-
       - name: Read version
         id: version
         run: echo "version=$(node -p "require('./Build/package.json').version")" >> "$GITHUB_OUTPUT"
 
-      - uses: NellowTCS/updato@1.0.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: NellowTCS/updato@1.0.3
         with:
           mode: version
           dist_dir: Build/dist
           version: ${{ steps.version.outputs.version }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
