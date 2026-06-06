@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: 20
 
-      - uses: NellowTCS/updato@1.0.1
+      - uses: NellowTCS/updato@1.0.2
         with:
           mode: version
           dist_dir: Build/dist
